@@ -1,0 +1,43 @@
+{
+  "name": "Mass Archiver",
+
+  "namespace": "VUMC\\MassArchiverExternalModule",
+  "framework-version": 12,
+  "authors": [
+    {
+      "name": "Eva Bascompte Moragas",
+      "email": "datacore@vumc.org",
+      "institution": "Vanderbilt University Medical Center"
+    }
+  ],
+
+  "permissions": [],
+
+  "links": {
+    "project": [
+      {
+        "name": "Mass Archiver",
+        "icon": "fas fa-solid fa-box-archive",
+        "url": "index.php",
+        "show-header-and-footer": true
+      }
+    ]
+  },
+
+  "no-auth-pages":[],
+
+  "description": "Allows the user to mass archive / mark as complete projects in bulk.",
+
+  "project-settings": [
+
+  ],
+
+  "crons": [],
+
+  "compatibility": {
+    "php-version-min": "7.3.29",
+    "php-version-max": "",
+    "redcap-version-min": "14.0.0",
+    "redcap-version-max": ""
+  }
+}
