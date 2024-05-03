@@ -74,6 +74,7 @@ $pid_list = ($_REQUEST['pid_list']) ?? "";
 
                 $('#archive_data_confirm').submit(function (event) {
                     var url = <?=json_encode($module->getUrl('archive_data.php'))?>;
+                    var original_url = <?=json_encode($module->getUrl('index.php'))?>;
                     var redcap_csrf_token = <?=json_encode($module->getCSRFToken())?>;
                     $("#confirmationForm").dialog("close");
                     $.ajax({
@@ -89,6 +90,10 @@ $pid_list = ($_REQUEST['pid_list']) ?? "";
                                 $('#dialogWarning p').html("There was an error while completeing the task. Please contact your administrator.");
                                 $("#dialogWarning").dialog({modal:true, width:300}).prev(".ui-dialog-titlebar").css("background","#f8d7da").css("color","#721c24");
                             }else{
+                                //refresh url without pids
+                                var refresh = original_url;
+                                window.history.pushState({ path: refresh }, '', refresh);
+
                                 $('textarea#pids_textarea').val("");
                                 $('#total_arhived').html(total_projects);
                                 $('#successMsg').show();
@@ -117,7 +122,7 @@ $pid_list = ($_REQUEST['pid_list']) ?? "";
             </form>
         </h6>
         <div class="container-fluid p-y-1" style="margin-top:60px">
-            <div id="successMsg" class='alert alert-success col-sm-6 offset-sm-3' style='display:none;border-color:#b2dba1 !important'>All <span id="total_arhived" style="font-weight: bold;"></span> project have been successfully archived.</div>
+            <div id="successMsg" class='alert alert-success col-sm-6 offset-sm-3' style='display:none;border-color:#b2dba1 !important'>All <span id="total_arhived" style="font-weight: bold;"></span> project/s have been successfully archived.</div>
             <div class="row m-b-1">
                 <form method="POST" action="" class="col-sm-6 offset-sm-3" id="archive_data">
                     <div class="form-group upload-area" id="archive_area">
