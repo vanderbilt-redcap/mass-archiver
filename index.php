@@ -89,6 +89,7 @@ $pid_list = ($_REQUEST['pid_list']) ?? "";
                                 $('#dialogWarning p').html("There was an error while completeing the task. Please contact your administrator.");
                                 $("#dialogWarning").dialog({modal:true, width:300}).prev(".ui-dialog-titlebar").css("background","#f8d7da").css("color","#721c24");
                             }else{
+                                $('textarea#pids_textarea').val("");
                                 $('#total_arhived').html(total_projects);
                                 $('#successMsg').show();
                             }
@@ -120,7 +121,7 @@ $pid_list = ($_REQUEST['pid_list']) ?? "";
             <div class="row m-b-1">
                 <form method="POST" action="" class="col-sm-6 offset-sm-3" id="archive_data">
                     <div class="form-group upload-area" id="archive_area">
-                        <textarea><?=$pid_list?></textarea>
+                        <textarea id="pids_textarea" name="pids_textarea"><?=$pid_list?></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block float-right" id="archive_btn">Archive Projects</button>
                 </form>
