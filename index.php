@@ -1,6 +1,7 @@
 <?php
 namespace VUMC\MassArchiverExternalModule;
 
+$pid_list = ($_REQUEST['pid_list']) ?? "";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -63,8 +64,9 @@ namespace VUMC\MassArchiverExternalModule;
                             }
                         });
                     }else{
-                        $('#dialogWarning p').html("This textbox can only contain numbers, commas and spaces and cannot be blank.");
-                        $("#dialogWarning").dialog({modal:true, width:300}).prev(".ui-dialog-titlebar").css("background","#f8d7da").css("color","#721c24");
+                        $('#dialogWarning p').html("This textbox can only contain <strong>numbers</strong> and <strong>commas</strong> and <strong>cannot be blank</strong>." +
+                            "<br><br><em>*Letters, spaces and special characters are not allowed.</em>");
+                        $("#dialogWarning").dialog({modal:true, width:350}).prev(".ui-dialog-titlebar").css("background","#f8d7da").css("color","#721c24");
                     }
 
                     return false;
@@ -72,6 +74,7 @@ namespace VUMC\MassArchiverExternalModule;
 
                 $('#archive_data_confirm').submit(function (event) {
                     var url = <?=json_encode($module->getUrl('archive_data.php'))?>;
+                    var original_url = <?=json_encode($module->getUrl('index.php'))?>;
                     var redcap_csrf_token = <?=json_encode($module->getCSRFToken())?>;
                     $("#confirmationForm").dialog("close");
                     $.ajax({
@@ -87,6 +90,11 @@ namespace VUMC\MassArchiverExternalModule;
                                 $('#dialogWarning p').html("There was an error while completeing the task. Please contact your administrator.");
                                 $("#dialogWarning").dialog({modal:true, width:300}).prev(".ui-dialog-titlebar").css("background","#f8d7da").css("color","#721c24");
                             }else{
+                                //refresh url without pids
+                                var refresh = original_url;
+                                window.history.pushState({ path: refresh }, '', refresh);
+
+                                $('textarea#pids_textarea').val("");
                                 $('#total_arhived').html(total_projects);
                                 $('#successMsg').show();
                             }
@@ -104,12 +112,21 @@ namespace VUMC\MassArchiverExternalModule;
         <h6 class="container">
             This list can only contain projects were the user has <em>Design Rights</em> to them.
         </h6>
+        <h6 class="container">
+            <em>*Letters, spaces and special characters are not allowed.</em>
+        </h6>
+        <br>
+        <h6 class="container">
+            <form method="POST" action="<?=$module->getUrl('select_data.php').'&redcap_csrf_token='.$module->getCSRFToken()?>" class="" id="select_data">
+            You can easily check and copy projects by clicking here: <button type="submit" class="btn btn-select btn-block" id="select_btn">Select Projects</button>
+            </form>
+        </h6>
         <div class="container-fluid p-y-1" style="margin-top:60px">
-            <div id="successMsg" class='alert alert-success col-sm-6 offset-sm-3' style='display:none;border-color:#b2dba1 !important'>All <span id="total_arhived" style="font-weight: bold;"></span> project have been successfully archived.</div>
+            <div id="successMsg" class='alert alert-success col-sm-6 offset-sm-3' style='display:none;border-color:#b2dba1 !important'>All <span id="total_arhived" style="font-weight: bold;"></span> project/s have been successfully archived.</div>
             <div class="row m-b-1">
                 <form method="POST" action="" class="col-sm-6 offset-sm-3" id="archive_data">
                     <div class="form-group upload-area" id="archive_area">
-                        <textarea></textarea>
+                        <textarea id="pids_textarea" name="pids_textarea"><?=$pid_list?></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block float-right" id="archive_btn">Archive Projects</button>
                 </form>
