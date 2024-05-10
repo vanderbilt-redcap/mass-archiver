@@ -19,7 +19,7 @@ if($module->isSuperUser()){
 
 $q = $module->query($sql,[USERID]);
 $printProjects = [];
-while ($row = $q->fetch_assoc()) {
+while ($row = $module->escape($q->fetch_assoc())) {
     $data = "#".$row['project_id']." => ".$row['app_title'];
     $printProjects[$row['project_id']] = $data;
 }
@@ -80,12 +80,14 @@ while ($row = $q->fetch_assoc()) {
 <div class="container-fluid p-y-1" style="margin-top:40px">
     <table class="table table-striped table-hover" style="border: 1px solid #dee2e6;" data-sortable>
         <?php
-        foreach ($printProjects as $project_id => $printProject) {?>
+        foreach ($printProjects as $project_id => $printProject) {
+            $project_id = (int)$project_id;
+            ?>
         <tr onclick="javascript:selectData('<?= $project_id; ?>')" row="<?=$project_id?>" value="<?=$project_id?>">
             <td>
                 <input value="<?=$project_id?>" id="<?=$project_id?>" onclick="selectData('<?= $project_id; ?>');" class='auto-submit' type="checkbox" chk_name='chk_table_<?=$constant;?>' name='tablefields[]'>
             </td>
-            <td><?=$printProject;?></td>
+            <td><?=$module->escape($printProject);?></td>
         </tr>
         <?php
         }
