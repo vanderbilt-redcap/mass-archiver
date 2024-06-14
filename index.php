@@ -107,10 +107,10 @@ $pid_list = ($_REQUEST['pid_list']) ?? "";
     </head>
     <body>
         <h6 class="container">
-            Add a list <em>REDCap Project Id's</em> separated by commas on the box below of the projects you wish to archive/mark as completed.
+            Add a list of <em>REDCap Project Id's</em> of the projects you wish to archive/mark as completed, separated by commas.
         </h6>
         <h6 class="container">
-            This list can only contain projects were the user has <em>Design Rights</em> to them.
+            This list can only contain projects where you have <em>Project Design and Setup</em> rights.
         </h6>
         <h6 class="container">
             <em>*Letters, spaces and special characters are not allowed.</em>
@@ -118,7 +118,7 @@ $pid_list = ($_REQUEST['pid_list']) ?? "";
         <br>
         <h6 class="container">
             <form method="POST" action="<?=$module->getUrl('select_data.php').'&redcap_csrf_token='.$module->getCSRFToken()?>" class="" id="select_data">
-            You can easily check and copy projects by clicking here: <button type="submit" class="btn btn-select btn-block" id="select_btn">Select Projects</button>
+                Click here to select from a list of eligible Projects: <button type="submit" class="btn btn-select btn-block" id="select_btn">Select Projects</button>
             </form>
         </h6>
         <div class="container-fluid p-y-1" style="margin-top:60px">

@@ -95,7 +95,7 @@ while ($row = $module->escape($q->fetch_assoc())) {
     </table>
     <form method="POST" action="<?=$module->getUrl('index.php').'&redcap_csrf_token='.$module->getCSRFToken()?>" id="copy_data">
         <input type="hidden" id="pid_list" name="pid_list">
-        <button type="submit" class="btn btn-primary btn-block float-right" id="copy_btn">Copy Projects</button>
+        <button type="submit" class="btn btn-primary btn-block float-right" id="copy_btn">Select Projects</button>
     </form>
 </div>
 </body>
