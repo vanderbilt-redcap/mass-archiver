@@ -37,7 +37,16 @@
     background-color: #adacac;
     border-color:#797979;
 }
-tr.rowSelected td{
+table.dataTable tbody tr.odd td {
+    background-color: #ffffff !important;
+}
+table.dataTable tbody tr.even td {
+    background-color: #ffffff !important;
+}
+table.dataTable tbody tr.rowSelected{
+    background-color: #e6f5ff !important;
+}
+table.dataTable tbody tr.rowSelected td{
     background-color: #e6f5ff !important;
 }
 .totalProjects{
@@ -56,4 +65,7 @@ tr.rowSelected td{
     vertical-align: middle;
     background-color: #777;
     border-radius: 10px;
+}
+#selectDataTable thead {
+    display: none;
 }
