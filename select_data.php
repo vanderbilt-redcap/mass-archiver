@@ -35,7 +35,9 @@ while ($row = $module->escape($q->fetch_assoc())) {
     <meta name="author" content="">
     <meta http-equiv="Cache-control" content="public">
     <meta name="theme-color" content="#fff">
+    <script type="text/javascript" src="<?=$module->getUrl('jquery.dataTables.min.js')?>"></script>
     <link type='text/css' href='<?=$module->getUrl('style_em.css')?>' rel='stylesheet' media='screen' />
+    <link type='text/css' href='<?=$module->getUrl('jquery.dataTables.min.css')?>' rel='stylesheet' media='screen' />
     <script>
         function selectData(pid){
             var checked = $('#'+pid).is(':checked');
@@ -69,6 +71,16 @@ while ($row = $module->escape($q->fetch_assoc())) {
         }
 
         $(document).ready(function () {
+            $('#selectDataTable').dataTable({
+                "bPaginate": false,
+                "bLengthChange": false,
+                "bFilter": true,
+                "bInfo": false,
+                "fnDrawCallback": function(oSettings) {
+                    $('#selectAllDiv').prependTo($('#selectDataTable_wrapper'));
+                }
+            });
+
             $('#copy_data').submit(function (event) {
                 var pid_array = [];
                 $('.rowSelected').each(function() {
@@ -89,13 +101,19 @@ while ($row = $module->escape($q->fetch_assoc())) {
 <h6 class="container">
     You have selected <span id="pid_total" class="badge totalProjects">0</span> projects
 </h6>
-<div class="container-fluid p-y-1" style="margin-top:40px;padding-bottom: 10px">
+<div id="selectAllDiv" style="float: left;padding-top: 10px;">
     <input type="checkbox" name="chkAll_1" onclick="checkAll();" style="cursor: pointer;">
     <a href="#" style="cursor: pointer;font-size: 14px;font-weight: normal;" onclick="checkAll();">Select All</a>
-
 </div>
-<div class="container-fluid p-y-1">
-    <table class="table table-striped table-hover" style="border: 1px solid #dee2e6;" data-sortable>
+<div class="container-fluid p-y-1"  style="margin-top:40px">
+    <table id="selectDataTable" class="table table-striped table-hover" style="border: 1px solid #dee2e6;" data-sortable>
+        <thead>
+        <tr>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
         <?php
         foreach ($printProjects as $project_id => $printProject) {
             $project_id = (int)$project_id;
@@ -109,8 +127,9 @@ while ($row = $module->escape($q->fetch_assoc())) {
         <?php
         }
         ?>
+        </tbody>
     </table>
-    <form method="POST" action="<?=$module->getUrl('index.php').'&redcap_csrf_token='.$module->getCSRFToken()?>" id="copy_data">
+    <form method="POST" action="<?=$module->getUrl('index.php').'&redcap_csrf_token='.$module->getCSRFToken()?>" id="copy_data" style="padding-top: 20px;">
         <input type="hidden" id="pid_list" name="pid_list">
         <button type="submit" class="btn btn-primary btn-block float-right" id="copy_btn">Select Projects</button>
     </form>
