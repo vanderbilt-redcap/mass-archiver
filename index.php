@@ -1,7 +1,7 @@
 <?php
 namespace VUMC\MassArchiverExternalModule;
 
-$pid_list = ($_REQUEST['pid_list']) ?? "";
+$pid_list = htmlentities(($_REQUEST['pid_list']) ?? "", ENT_QUOTES);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -101,6 +101,10 @@ $pid_list = ($_REQUEST['pid_list']) ?? "";
                         }
                     });
                     return false;
+                });
+
+                $('#select_data').submit(function (event) {
+                    $('#select_data').attr('action', $(this).attr('action')+'&pid_list='+$('#pids_textarea').val());
                 });
             });
         </script>
