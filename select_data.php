@@ -3,8 +3,10 @@ namespace VUMC\MassArchiverExternalModule;
 include APP_PATH_DOCROOT . 'ProjectGeneral/header.php';
 
 $pid_list = htmlentities(($_REQUEST['pid_list']) ?? "", ENT_QUOTES);
+$pids_total = 0;
 if($pid_list != "undefined"){
     $pid_list = explode(',',$pid_list);
+    $pids_total = count($pid_list);
 }
 
 // We only show projects to which the current user has design rights
@@ -26,6 +28,10 @@ $printProjects = [];
 while ($row = $module->escape($q->fetch_assoc())) {
     $data = "#".$row['project_id']." => ".$row['app_title'];
     $printProjects[$row['project_id']] = $data;
+}
+$cheked = "";
+if($pids_total == count($printProjects)){
+    $cheked = "checked";
 }
 ?>
 
@@ -103,10 +109,10 @@ while ($row = $module->escape($q->fetch_assoc())) {
 </h6>
 <br><br>
 <h6 class="container">
-    You have selected <span id="pid_total" class="badge totalProjects">0</span> projects
+    You have selected <span id="pid_total" class="badge totalProjects"><?=$pids_total;?></span> projects
 </h6>
 <div id="selectAllDiv" style="float: left;padding-top: 10px;">
-    <input type="checkbox" name="chkAll_1" onclick="checkAll();" style="cursor: pointer;">
+    <input type="checkbox" <?=$cheked?> name="chkAll_1" onclick="checkAll();" style="cursor: pointer;">
     <a href="#" style="cursor: pointer;font-size: 14px;font-weight: normal;" onclick="checkAll();">Select All</a>
 </div>
 <div class="container-fluid p-y-1"  style="margin-top:40px">

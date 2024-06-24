@@ -94,8 +94,13 @@ $pid_list = htmlentities(($_REQUEST['pid_list']) ?? "", ENT_QUOTES);
                                 var refresh = original_url;
                                 window.history.pushState({ path: refresh }, '', refresh);
 
+                                var confirmation_message = "The project has been successfully archived.";
+                                if(total_projects > 1){
+                                    confirmation_message = "All <strong>"+total_projects+"</strong> projects have been successfully archived.";
+                                }
+
                                 $('textarea#pids_textarea').val("");
-                                $('#total_arhived').html(total_projects);
+                                $('#successMsg').html(confirmation_message);
                                 $('#successMsg').show();
                             }
                         }
@@ -126,7 +131,7 @@ $pid_list = htmlentities(($_REQUEST['pid_list']) ?? "", ENT_QUOTES);
             </form>
         </h6>
         <div class="container-fluid p-y-1" style="margin-top:60px">
-            <div id="successMsg" class='alert alert-success col-sm-6 offset-sm-3' style='display:none;border-color:#b2dba1 !important'>All <span id="total_arhived" style="font-weight: bold;"></span> project/s have been successfully archived.</div>
+            <div id="successMsg" class='alert alert-success col-sm-6 offset-sm-3' style='display:none;border-color:#b2dba1 !important'></div>
             <div class="row m-b-1">
                 <form method="POST" action="" class="col-sm-6 offset-sm-3" id="archive_data">
                     <div class="form-group upload-area" id="archive_area">
