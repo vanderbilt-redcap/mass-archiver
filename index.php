@@ -1,7 +1,8 @@
 <?php
 namespace VUMC\MassArchiverExternalModule;
 
-$pid_list = ($_REQUEST['pid_list']) ?? "";
+$pid_list = htmlentities(($_REQUEST['pid_list']) ?? "", ENT_QUOTES);
+$project_id = (int)$_GET['pid'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,6 +19,7 @@ $pid_list = ($_REQUEST['pid_list']) ?? "";
             $(document).ready(function () {
                 var pids = "";
                 var total_projects = "";
+                var project_id = <?=json_encode($project_id)?>;
 
                 $('#archive_data').submit(function (event) {
                     var data = $('#archive_area textarea').val().trim();
@@ -41,7 +43,9 @@ $pid_list = ($_REQUEST['pid_list']) ?? "";
 
                                 var display_data = "<div>";
                                 Object.keys(projects_data).forEach(function (section) {
-                                    display_data += "<div>#"+section+" => "+projects_data[section]+"</div>";
+                                    var link = <?=json_encode(APP_PATH_WEBROOT."index.php?&pid=")?>;
+                                    link = "<a href='"+link+section+"' target='_blank'>#"+section+" => "+projects_data[section]+"</a>";
+                                    display_data += "<div>"+link+"</div>";
                                     total_projects += 1;
                                 });
                                 display_data += "</div>";
@@ -94,13 +98,22 @@ $pid_list = ($_REQUEST['pid_list']) ?? "";
                                 var refresh = original_url;
                                 window.history.pushState({ path: refresh }, '', refresh);
 
+                                var confirmation_message = "The project has been successfully archived.";
+                                if(total_projects > 1){
+                                    confirmation_message = "All <strong>"+total_projects+"</strong> projects have been successfully archived.";
+                                }
+
                                 $('textarea#pids_textarea').val("");
-                                $('#total_arhived').html(total_projects);
+                                $('#successMsg').html(confirmation_message);
                                 $('#successMsg').show();
                             }
                         }
                     });
                     return false;
+                });
+
+                $('#select_data').submit(function (event) {
+                    $('#select_data').attr('action', $(this).attr('action')+'&pid_list='+$('#pids_textarea').val());
                 });
             });
         </script>
@@ -122,7 +135,7 @@ $pid_list = ($_REQUEST['pid_list']) ?? "";
             </form>
         </h6>
         <div class="container-fluid p-y-1" style="margin-top:60px">
-            <div id="successMsg" class='alert alert-success col-sm-6 offset-sm-3' style='display:none;border-color:#b2dba1 !important'>All <span id="total_arhived" style="font-weight: bold;"></span> project/s have been successfully archived.</div>
+            <div id="successMsg" class='alert alert-success col-sm-6 offset-sm-3' style='display:none;border-color:#b2dba1 !important'></div>
             <div class="row m-b-1">
                 <form method="POST" action="" class="col-sm-6 offset-sm-3" id="archive_data">
                     <div class="form-group upload-area" id="archive_area">
