@@ -26,7 +26,7 @@ if($module->isSuperUser()){
 $q = $module->query($sql,[USERID]);
 $printProjects = [];
 while ($row = $module->escape($q->fetch_assoc())) {
-    $data = "#".$row['project_id']." => ".$row['app_title'];
+    $data = $row['app_title'];
     $printProjects[$row['project_id']] = $data;
 }
 $cheked = "";
@@ -137,12 +137,14 @@ if($pids_total == count($printProjects)){
                 }
             }
             $project_id = (int)$project_id;
+            $url = APP_PATH_WEBROOT."index.php?&pid=".$project_id;
+            $link = "<a href='".$url."' target='_blank'>#".$project_id."</a>";
             ?>
             <tr onclick="javascript:selectData('<?= $project_id; ?>')" row="<?=$project_id?>" value="<?=$project_id?>" name="chkAllTR" class="<?=$selectedClass?>">
                 <td>
                     <input value="<?=$project_id?>" id="<?=$project_id?>" <?=$selected;?> onclick="selectData('<?= $project_id; ?>');" class='auto-submit' type="checkbox" name='chkAll' name='tablefields[]'>
                 </td>
-                <td><?=$module->escape($printProject);?></td>
+                <td><?=$link." => ".$module->escape($printProject);?></td>
             </tr>
         <?php
         }
