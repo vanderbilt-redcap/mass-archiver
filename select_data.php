@@ -4,7 +4,7 @@ include APP_PATH_DOCROOT . 'ProjectGeneral/header.php';
 
 $pid_list = htmlentities(($_REQUEST['pid_list']) ?? "", ENT_QUOTES);
 $pids_total = 0;
-if($pid_list != "undefined"){
+if($pid_list != "undefined" && !empty($pid_list)){
     $pid_list = explode(',',$pid_list);
     $pids_total = count($pid_list);
 }
@@ -59,14 +59,55 @@ if($pids_total == count($printProjects)){
                 $('[row="' + pid + '"]').removeClass('rowSelected');
             }
 
-            //Update Projects Counter
+            updateProjectsCounter();
+        }
+
+        function updateProjectsCounter(){
             var count = $('.rowSelected').length;
             if(count>0){
                 $("#pid_total").text(count);
-            }else{
+            }else {
                 $("#pid_total").text("0");
             }
         }
+
+        var pressingShift = false;
+        var clickFirst = "";
+        $(document).on({
+            keydown: function(e) {
+                if(e.shiftKey) {
+                    pressingShift = true;
+                }
+            },
+            keyup: function(e) {
+                if(e.shiftKey) {
+                    pressingShift = false;
+                }
+            },
+            click: function(e) {
+                //If shift is still pressed and we click a second time
+                if (pressingShift && clickFirst != "") {
+                    var clickSecond = parseInt($(e.target).attr('multipleSel'));
+                    if(clickFirst < clickSecond){
+                        for(var sel = (clickFirst + 1); sel < clickSecond; sel++){
+                            $('input[multipleSel=' + sel + ']').prop("checked", true);
+                            $('tr[multipleSel=' + sel + ']').addClass('rowSelected');
+                        }
+                    }else if(clickFirst > clickSecond){
+                        for(var sel = (clickFirst - 1); sel > clickSecond; sel--){
+                            $('input[multipleSel=' + sel + ']').prop("checked", true);
+                            $('tr[multipleSel=' + sel + ']').addClass('rowSelected');
+                        }
+                    }
+                    clickFirst = "";
+                    pressingShift = false;
+                    updateProjectsCounter();
+                }else{
+                    //we click for the first time without shift being pressed
+                    clickFirst = parseInt($(e.target).attr('multipleSel'));
+                }
+            }
+        });
 
         function checkAll() {
             if($("[name='chkAll']").not(':hidden').prop("checked")) {
@@ -125,6 +166,7 @@ if($pids_total == count($printProjects)){
         </thead>
         <tbody>
         <?php
+        $count = 0;
         foreach ($printProjects as $project_id => $printProject) {
             if(!empty($pid_list) && is_array($pid_list)){
                 $selected = "";
@@ -139,12 +181,13 @@ if($pids_total == count($printProjects)){
             $project_id = (int)$project_id;
             $url = APP_PATH_WEBROOT."index.php?&pid=".$project_id;
             $link = "<a href='".$url."' target='_blank' style='font-weight: bold;'>#".$project_id."</a>";
+            $count++;
             ?>
-            <tr onclick="javascript:selectData('<?= $project_id; ?>')" row="<?=$project_id?>" value="<?=$project_id?>" name="chkAllTR" class="<?=$selectedClass?>">
-                <td width="5%">
-                    <input value="<?=$project_id?>" id="<?=$project_id?>" <?=$selected;?> onclick="selectData('<?= $project_id; ?>');" class='auto-submit' type="checkbox" name='chkAll' name='tablefields[]'>
+            <tr onclick="javascript:selectData('<?= $project_id; ?>')" row="<?=$project_id?>" multipleSel="<?=$count?>" value="<?=$project_id?>" name="chkAllTR" class="<?=$selectedClass?>">
+                <td width="5%" multipleSel="<?=$count?>">
+                    <input value="<?=$project_id?>" id="<?=$project_id?>" multipleSel="<?=$count?>" <?=$selected;?> onclick="selectData('<?= $project_id; ?>');" class='auto-submit' type="checkbox" name='chkAll' name='tablefields[]'>
                 </td>
-                <td><?=$link." => ".$module->escape($printProject);?></td>
+                <td multipleSel="<?=$count?>"><?=$link." => ".$module->escape($printProject);?></td>
             </tr>
         <?php
         }
