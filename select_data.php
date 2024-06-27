@@ -141,7 +141,7 @@ if($pids_total == count($printProjects)){
             $link = "<a href='".$url."' target='_blank' style='font-weight: bold;'>#".$project_id."</a>";
             ?>
             <tr onclick="javascript:selectData('<?= $project_id; ?>')" row="<?=$project_id?>" value="<?=$project_id?>" name="chkAllTR" class="<?=$selectedClass?>">
-                <td>
+                <td width="5%">
                     <input value="<?=$project_id?>" id="<?=$project_id?>" <?=$selected;?> onclick="selectData('<?= $project_id; ?>');" class='auto-submit' type="checkbox" name='chkAll' name='tablefields[]'>
                 </td>
                 <td><?=$link." => ".$module->escape($printProject);?></td>
