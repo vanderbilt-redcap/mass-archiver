@@ -138,7 +138,7 @@ if($pids_total == count($printProjects)){
             }
             $project_id = (int)$project_id;
             $url = APP_PATH_WEBROOT."index.php?&pid=".$project_id;
-            $link = "<a href='".$url."' target='_blank'>#".$project_id."</a>";
+            $link = "<a href='".$url."' target='_blank' style='font-weight: bold;'>#".$project_id."</a>";
             ?>
             <tr onclick="javascript:selectData('<?= $project_id; ?>')" row="<?=$project_id?>" value="<?=$project_id?>" name="chkAllTR" class="<?=$selectedClass?>">
                 <td>
